@@ -13,12 +13,14 @@ namespace InventoryManagementAPI.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<LocationType> LocationTypes { get; set; }
-        public DbSet<Inventory> Inventories { get; set; }
+        public AppDbContext(){}
+
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
+        public virtual DbSet<LocationType> LocationTypes { get; set; }
+        public virtual DbSet<Inventory> Inventories { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

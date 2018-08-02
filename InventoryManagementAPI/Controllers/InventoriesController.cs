@@ -120,6 +120,54 @@ namespace InventoryManagementAPI.Controllers
 
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateInventory(int id, [FromBody] InventoryUpdateDto inventoryUpdate)
+        {
+            var inventory = await _invRepo.GetInventory(id);
+
+            if (inventory == null)
+                return NotFound();
+
+
+            if(inventory.Product.Id != inventoryUpdate.ProductId)
+            {
+                var product = await _prodctRepo.GetProduct(inventoryUpdate.ProductId);
+
+                if (product == null)
+                    return BadRequest(new { error = "Product not Found" });
+
+                inventory.Product = product;
+            }
+
+            if(inventory.Location.Id != inventoryUpdate.LocationId)
+            {
+                var location = await _locationRepo.GetLocation(inventoryUpdate.LocationId);
+
+                if (location == null)
+                    return BadRequest(new { error = "Location not Found" });
+
+                inventory.Location = location;
+            }
+
+            if (!string.IsNullOrEmpty(inventoryUpdate.Sku))
+                inventory.Sku = inventoryUpdate.Sku;
+
+
+            if (inventory.Quantity != inventoryUpdate.Quantity)
+                inventory.Quantity = inventoryUpdate.Quantity;
+
+            if (inventory.ThresholdCritical != inventoryUpdate.ThresholdCritical)
+                inventory.ThresholdCritical = inventoryUpdate.ThresholdCritical;
+
+
+            await _invRepo.Save();
+
+            return Ok(inventory);
+
+
+        }
+
+
 
     }
 }

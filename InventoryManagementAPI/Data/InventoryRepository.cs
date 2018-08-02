@@ -46,7 +46,10 @@ namespace InventoryManagementAPI.Data
 
         public async Task<Inventory> GetInventory(int id)
         {
-            var inventory = await _dbContext.Inventories.SingleOrDefaultAsync(i => i.Id == id);
+            var inventory = await _dbContext.Inventories
+                                            .Include(i => i.Product)
+                                            .Include(i => i.Location)                
+                                            .SingleOrDefaultAsync(i => i.Id == id);
 
             return inventory;
         }
