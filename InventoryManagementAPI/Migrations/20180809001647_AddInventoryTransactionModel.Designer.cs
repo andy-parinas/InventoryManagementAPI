@@ -11,9 +11,10 @@ using System;
 namespace InventoryManagementAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180809001647_AddInventoryTransactionModel")]
+    partial class AddInventoryTransactionModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,8 +35,6 @@ namespace InventoryManagementAPI.Migrations
                     b.Property<string>("Sku")
                         .IsRequired();
 
-                    b.Property<int?>("StatusId");
-
                     b.Property<int>("ThresholdCritical");
 
                     b.Property<int>("ThresholdWarning");
@@ -46,22 +45,7 @@ namespace InventoryManagementAPI.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("Inventories");
-                });
-
-            modelBuilder.Entity("InventoryManagementAPI.Models.InventoryStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Status")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InventoryStatuses");
                 });
 
             modelBuilder.Entity("InventoryManagementAPI.Models.InventoryTransaction", b =>
@@ -209,10 +193,6 @@ namespace InventoryManagementAPI.Migrations
                     b.HasOne("InventoryManagementAPI.Models.Product", "Product")
                         .WithMany("Inventories")
                         .HasForeignKey("ProductId");
-
-                    b.HasOne("InventoryManagementAPI.Models.InventoryStatus", "Status")
-                        .WithMany("Inventories")
-                        .HasForeignKey("StatusId");
                 });
 
             modelBuilder.Entity("InventoryManagementAPI.Models.InventoryTransaction", b =>

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InventoryManagementAPI", "I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagementAPITests", "InventoryManagementAPITests\InventoryManagementAPITests.csproj", "{1C52FB3A-4FC6-4EA9-9243-09E16B397741}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POSApplicationAPI", "POSApplicationAPI\POSApplicationAPI.csproj", "{22E83994-A354-4297-976E-9AEAF9E5A257}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1C52FB3A-4FC6-4EA9-9243-09E16B397741}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C52FB3A-4FC6-4EA9-9243-09E16B397741}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C52FB3A-4FC6-4EA9-9243-09E16B397741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22E83994-A354-4297-976E-9AEAF9E5A257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E83994-A354-4297-976E-9AEAF9E5A257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E83994-A354-4297-976E-9AEAF9E5A257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E83994-A354-4297-976E-9AEAF9E5A257}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

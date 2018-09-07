@@ -21,11 +21,18 @@ namespace InventoryManagementAPI.Helpers
 
             CreateMap<Inventory, InventoryListDto>()
                 .ForMember(d => d.Product, o => o.MapFrom(i => i.Product.Name))
-                .ForMember(d => d.Location, o => o.MapFrom(i => i.Location.Name));
+                .ForMember(d => d.Location, o => o.MapFrom(i => i.Location.Name))
+                .ForMember(d => d.Status, o => o.MapFrom(i => i.Status.Status));
 
             CreateMap<Inventory, InventoryDetailDto>()
-                .ForMember(d => d.Product, o => o.MapFrom(i => i.Product))
-                .ForMember(d => d.Location, o => o.MapFrom(i => i.Location));
+                .ForMember(d => d.Product, o => o.MapFrom(i => i.Product.Name))
+                .ForMember(d => d.ProductId, o => o.MapFrom(i => i.Product.Id))
+                .ForMember(d => d.Location, o => o.MapFrom(i => i.Location.Name))
+                .ForMember(d => d.LocationId, o => o.MapFrom(i => i.Location.Id))
+                .ForMember(d => d.Status, o => o.MapFrom(i => i.Status.Status))
+                .ForMember(d => d.StatusId, o => o.MapFrom(i => i.Status.Id));
+
+
 
         }
     }

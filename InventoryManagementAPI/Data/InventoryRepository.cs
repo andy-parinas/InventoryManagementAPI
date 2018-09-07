@@ -31,7 +31,11 @@ namespace InventoryManagementAPI.Data
         public async Task<PageList<Inventory>> GetInventories(InventoryParams inventoryParams)
         {
 
-            var inventoriesQuery = _dbContext.Inventories.Include(i => i.Product).Include(i => i.Location).AsQueryable();
+            var inventoriesQuery = _dbContext.Inventories
+                                        .Include(i => i.Product)
+                                        .Include(i => i.Location)
+                                        .Include(i => i.Status)
+                                        .AsQueryable();
 
             if (!string.IsNullOrEmpty(inventoryParams.Sku))
                 inventoriesQuery = inventoriesQuery.Where(i => i.Sku.Contains(inventoryParams.Sku));
@@ -48,7 +52,8 @@ namespace InventoryManagementAPI.Data
         {
             var inventory = await _dbContext.Inventories
                                             .Include(i => i.Product)
-                                            .Include(i => i.Location)                
+                                            .Include(i => i.Location)
+                                            .Include(i => i.Status)
                                             .SingleOrDefaultAsync(i => i.Id == id);
 
             return inventory;

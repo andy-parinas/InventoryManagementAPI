@@ -27,6 +27,10 @@ namespace InventoryManagementAPI.Models
 
         public Location Location { get; set; }
 
+        public InventoryStatus Status { get; set; }
+
+        public ICollection<InventoryTransaction> Transactions { get; set; }
+
 
     }
 }

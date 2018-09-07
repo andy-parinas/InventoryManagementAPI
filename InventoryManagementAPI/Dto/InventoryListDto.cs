@@ -20,5 +20,8 @@ namespace InventoryManagementAPI.Dto
         public string Product { get; set; }
 
         public string Location { get; set; }
+
+        public string Status { get; set; }
+
     }
 }

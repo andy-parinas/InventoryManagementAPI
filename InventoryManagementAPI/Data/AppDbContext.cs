@@ -21,6 +21,10 @@ namespace InventoryManagementAPI.Data
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<LocationType> LocationTypes { get; set; }
         public virtual DbSet<Inventory> Inventories { get; set; }
+        public virtual DbSet<InventoryTransaction> InventoryTransactions { get; set; }
+        public virtual DbSet<TransactionType> TransactionTypes { get; set; }
+        public virtual DbSet<InventoryStatus> InventoryStatuses { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -40,6 +44,18 @@ namespace InventoryManagementAPI.Data
             builder.Entity<Inventory>()
                 .HasOne(i => i.Location)
                 .WithMany(l => l.Inventories);
+
+            builder.Entity<Inventory>()
+                .HasOne(i => i.Status)
+                .WithMany(s => s.Inventories);
+
+            builder.Entity<InventoryTransaction>()
+                .HasOne(t => t.TransactionType)
+                .WithMany(y => y.Transactions);
+
+            builder.Entity<InventoryTransaction>()
+                .HasOne(t => t.Inventory)
+                .WithMany(i => i.Transactions);
 
         }
 
