@@ -32,7 +32,12 @@ namespace InventoryManagementAPI.Helpers
                 .ForMember(d => d.Status, o => o.MapFrom(i => i.Status.Status))
                 .ForMember(d => d.StatusId, o => o.MapFrom(i => i.Status.Id));
 
+            CreateMap<InventoryTransaction, TransactionListDto>()
+                .ForMember(d => d.TransactionType, o => o.MapFrom(t => t.TransactionType.Name));
 
+            CreateMap<InventoryTransaction, TransactionDetailDto>()
+               //.ForMember(d => d.TransactionType, o => o.MapFrom(t => t.TransactionType.Name))
+               .ForMember(d => d.TransactionTypeId, o => o.MapFrom(t => t.TransactionType.Id));
 
         }
     }

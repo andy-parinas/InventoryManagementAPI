@@ -18,15 +18,18 @@ namespace InventoryManagementAPI.Controllers
         private readonly IInventoryRepository _invRepo;
         private readonly IProductRepository _prodctRepo;
         private readonly ILocationRepository _locationRepo;
+        private readonly ITransactionRepository _transRepo;
         private readonly IMapper _mapper;
 
 
         public InventoriesController(IInventoryRepository invRepo, IMapper mapper, 
-            IProductRepository productRepo, ILocationRepository locationRepo )
+            IProductRepository productRepo, 
+            ILocationRepository locationRepo, ITransactionRepository transRepo )
         {
             _invRepo = invRepo;
             _prodctRepo = productRepo;
             _locationRepo = locationRepo;
+            _transRepo = transRepo;
             _mapper = mapper;
         }
 
@@ -37,7 +40,8 @@ namespace InventoryManagementAPI.Controllers
 
             var inventoriesToReturn = _mapper.Map<ICollection<InventoryListDto>>(inventories);
 
-            Response.AddPagination(inventories.CurrentPage, inventories.PageSize, inventories.TotalCount, inventories.TotalPages);
+            Response.AddPagination(inventories.CurrentPage, inventories.PageSize, 
+                inventories.TotalCount, inventories.TotalPages);
 
             return Ok(inventoriesToReturn);
 
@@ -56,6 +60,23 @@ namespace InventoryManagementAPI.Controllers
 
             return Ok(invetoryToReturn);
         }
+
+        [HttpGet("{id}/transactions")]
+        public async Task<IActionResult> GetTransactionsByInventoryId(int id, [FromQuery] TransactionParams transParams)
+        {
+            var transactions = await _transRepo.GetTransactionsByInventoryId(id, transParams);
+
+            var transactionsToReturn = _mapper.Map<ICollection<TransactionListDto>>(transactions);
+
+            Response.AddPagination(transactions.CurrentPage, 
+                transactions.PageSize, transactions.TotalCount, transactions.TotalPages);
+
+            return Ok(transactionsToReturn);
+
+
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> CreateInventory([FromBody] InventoryCreateDto inventory)
@@ -98,6 +119,9 @@ namespace InventoryManagementAPI.Controllers
 
         }
 
+        /*
+         * //Removing this controller action.
+         * //Inventory Quantity should only be updated by creating transactions.
         [HttpPatch("sku/{sku}")]
         public async Task<IActionResult> UpdateInventoryCount(string sku, [FromBody] InventoryCountDto inventoryCount)
         {
@@ -119,6 +143,7 @@ namespace InventoryManagementAPI.Controllers
             return BadRequest(new { error = "Error updating the inventory" });
 
         }
+        */
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateInventory(int id, [FromBody] InventoryUpdateDto inventoryUpdate)
@@ -152,9 +177,10 @@ namespace InventoryManagementAPI.Controllers
             if (!string.IsNullOrEmpty(inventoryUpdate.Sku))
                 inventory.Sku = inventoryUpdate.Sku;
 
-
-            if (inventory.Quantity != inventoryUpdate.Quantity)
-                inventory.Quantity = inventoryUpdate.Quantity;
+            //Removing Inventory Update of quantity.
+            //Quantity should be updated by adding transactions
+            //if (inventory.Quantity != inventoryUpdate.Quantity)
+            //    inventory.Quantity = inventoryUpdate.Quantity;
 
             if (inventory.ThresholdCritical != inventoryUpdate.ThresholdCritical)
                 inventory.ThresholdCritical = inventoryUpdate.ThresholdCritical;

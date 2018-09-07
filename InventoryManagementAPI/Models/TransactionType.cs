@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementAPI.Models
 {
+
     public class TransactionType
     {
         [Key]
@@ -13,6 +14,9 @@ namespace InventoryManagementAPI.Models
 
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        public string Action { get; set; }
 
         public ICollection<InventoryTransaction> Transactions { get; set; }
 

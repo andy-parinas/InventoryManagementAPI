@@ -59,6 +59,7 @@ namespace InventoryManagementAPI
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
 
             //ADD AUTOMAPPER
             /*
