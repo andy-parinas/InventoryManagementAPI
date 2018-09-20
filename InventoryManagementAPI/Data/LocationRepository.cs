@@ -35,17 +35,26 @@ namespace InventoryManagementAPI.Data
             return location;
         }
 
-        public async Task<ICollection<Location>> GetLocations(LocationParams locationParams)
+        public async Task<Location> GetLocationByName(string name)
+        {
+            var location = await _dbContext.Locations.SingleOrDefaultAsync(l => l.Name == name);
+
+            return location;
+        }
+
+        public async Task<PageList<Location>> GetLocations(LocationParams locationParams)
         {
             var locations = _dbContext.Locations.Include(l => l.LocationType).AsQueryable();
 
             if (!string.IsNullOrEmpty(locationParams.Name))
-                locations = locations.Where(l => l.Name == locationParams.Name);
+                locations = locations.Where(l => l.Name.Contains(locationParams.Name));
 
             if (!string.IsNullOrEmpty(locationParams.LocationType))
                 locations = locations.Where(l => l.LocationType.Name == locationParams.LocationType);
 
-            return await locations.ToListAsync();
+            //return await locations.ToListAsync();
+            return await PageList<Location>.CreateAsync(locations,
+                locationParams.PageNumber, locationParams.PageSize);
 
         }
 

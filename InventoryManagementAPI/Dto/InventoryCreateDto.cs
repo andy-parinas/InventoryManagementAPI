@@ -22,9 +22,12 @@ namespace InventoryManagementAPI.Dto
         public int ThresholdCritical { get; set; }
 
         [Required]
-        public int ProductId { get; set; }
+        public string Product { get; set; }
 
         [Required]
-        public int LocationId { get; set; }
+        public string Location { get; set; }
+
+        [Required]
+        public string Status { get; set; }
     }
 }

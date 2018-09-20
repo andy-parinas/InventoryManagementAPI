@@ -25,11 +25,15 @@ namespace InventoryManagementAPI.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetLocations(LocationParams locationParams)
+        public async Task<IActionResult> GetLocations([FromQuery] LocationParams locationParams)
         {
             var locations = await _locationRepo.GetLocations(locationParams);
 
             var locationList = _mapper.Map<ICollection<LocationListDto>>(locations);
+
+            Response.AddPagination(locations.CurrentPage, locations.PageSize,
+                locations.TotalCount, locations.TotalPages);
+
 
             return Ok(locationList);
 

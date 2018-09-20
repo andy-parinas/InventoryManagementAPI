@@ -11,7 +11,9 @@ namespace InventoryManagementAPI.Data
     {
         Task<Location> GetLocation(int id);
 
-        Task<ICollection<Location>> GetLocations(LocationParams locationParams);
+        Task<Location> GetLocationByName(string name);
+
+        Task<PageList<Location>> GetLocations(LocationParams locationParams);
 
         Task<LocationType> GetLocationType(int id);
 

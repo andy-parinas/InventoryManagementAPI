@@ -37,6 +37,13 @@ namespace InventoryManagementAPI.Data
             return product;
         }
 
+        public async Task<Product> GetProductByName(string name)
+        {
+            var product = await _dbContext.Products.SingleOrDefaultAsync(p => p.Name == name);
+
+            return product;
+        }
+
         public async Task<ICollection<ProductCategory>> GetProductCategories()
         {
             var categories = await _dbContext.ProductCategories.ToListAsync();
@@ -55,6 +62,9 @@ namespace InventoryManagementAPI.Data
         {
             var products = _dbContext.Products.Include(p => p.ProductCategory).AsQueryable();
 
+            if (!string.IsNullOrEmpty(productParams.Name))
+                products = products.Where(p => p.Name.Contains(productParams.Name));
+
             return await PageList<Product>.CreateAsync(products, productParams.PageNumber, productParams.PageSize);
 
         }
@@ -63,5 +73,7 @@ namespace InventoryManagementAPI.Data
         {
             return await _dbContext.SaveChangesAsync() > 0;
         }
+
+        
     }
 }

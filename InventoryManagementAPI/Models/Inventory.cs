@@ -29,6 +29,8 @@ namespace InventoryManagementAPI.Models
 
         public InventoryStatus Status { get; set; }
 
+        public bool IsArchived { get; set; }
+
         public ICollection<InventoryTransaction> Transactions { get; set; }
 
 

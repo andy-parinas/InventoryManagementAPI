@@ -13,6 +13,8 @@ namespace InventoryManagementAPI.Data
 
         Task<Product> GetProduct(int id);
 
+        Task<Product> GetProductByName(string name);
+
         Task<ICollection<ProductCategory>> GetProductCategories();
 
         Task<ProductCategory> GetProductCategory(int id);

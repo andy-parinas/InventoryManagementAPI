@@ -76,20 +76,35 @@ namespace InventoryManagementAPI.Controllers
 
         }
 
+        [HttpGet("statuses")]
+        public async Task<IActionResult> GetInventoryStatuses()
+        {
+            var statuses = await _invRepo.GetInventoryStatuses();
+
+            var statusesToReturn = _mapper.Map<ICollection<InventoryStatusListDto>>(statuses);
+
+            return Ok(statusesToReturn);
+        }
 
 
         [HttpPost]
         public async Task<IActionResult> CreateInventory([FromBody] InventoryCreateDto inventory)
         {
-            var product = await _prodctRepo.GetProduct(inventory.ProductId);
+            //var product = await _prodctRepo.GetProduct(inventory.ProductId);
+            var product = await _prodctRepo.GetProductByName(inventory.Product);
 
             if (product == null)
                 ModelState.AddModelError("Product", "Product Not Found");
 
-            var location = await _locationRepo.GetLocation(inventory.LocationId);
+            var location = await _locationRepo.GetLocationByName(inventory.Location);
 
             if (location == null)
                 ModelState.AddModelError("Location", "Location not Found");
+
+            var status = await _invRepo.GetInventoryStatusByName(inventory.Status);
+
+            if (status == null)
+                ModelState.AddModelError("Status", "Status Not Found");
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -98,16 +113,17 @@ namespace InventoryManagementAPI.Controllers
             Inventory newIventory = new Inventory
             {
                 Sku = inventory.Sku,
-                Quantity = inventory.Quantity,
+                Quantity = 0,
                 ThresholdWarning = inventory.ThresholdWarning,
                 ThresholdCritical = inventory.ThresholdCritical,
                 Product = product,
-                Location = location
+                Location = location,
+                Status = status
             };
 
             _invRepo.Add(newIventory);
 
-            if(await _prodctRepo.Save())
+            if(await _invRepo.Save())
             {
                 var invetoryToReturn = _mapper.Map<InventoryDetailDto>(newIventory);
 
@@ -119,31 +135,7 @@ namespace InventoryManagementAPI.Controllers
 
         }
 
-        /*
-         * //Removing this controller action.
-         * //Inventory Quantity should only be updated by creating transactions.
-        [HttpPatch("sku/{sku}")]
-        public async Task<IActionResult> UpdateInventoryCount(string sku, [FromBody] InventoryCountDto inventoryCount)
-        {
-            var inventory = await _invRepo.GetInventoryBySku(sku);
-
-            if (inventory == null)
-                return NotFound();
-
-            int qty = inventory.Quantity + inventoryCount.Count;
-
-            if (qty >= 0)
-                inventory.Quantity = qty;
-
-            if(await _invRepo.Save())
-            {
-                return Ok(inventory);
-            }
-
-            return BadRequest(new { error = "Error updating the inventory" });
-
-        }
-        */
+       
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateInventory(int id, [FromBody] InventoryUpdateDto inventoryUpdate)
@@ -153,46 +145,133 @@ namespace InventoryManagementAPI.Controllers
             if (inventory == null)
                 return NotFound();
 
-
-            if(inventory.Product.Id != inventoryUpdate.ProductId)
+            if(inventory.Sku != inventoryUpdate.Sku)
             {
-                var product = await _prodctRepo.GetProduct(inventoryUpdate.ProductId);
+                //Check if SKU is existing
+                var inventoryBySku = await _invRepo.GetInventoryBySku(inventoryUpdate.Sku);
+
+                //IF SKU is not existing - update the sku. Else return Error that SKU already exist.
+                //This means that the combination of Product and Location already exist.
+                if(inventoryBySku == null)
+                {
+                    inventory.Sku = inventoryUpdate.Sku;
+                }else
+                {
+                    ModelState.AddModelError("SKU", "SKU Already Exist");
+                }
+
+            }
+
+
+            if(inventory.Product.Name != inventoryUpdate.Product)
+            {
+                var product = await _prodctRepo.GetProductByName(inventoryUpdate.Product);
 
                 if (product == null)
-                    return BadRequest(new { error = "Product not Found" });
-
-                inventory.Product = product;
+                {
+                    ModelState.AddModelError("Product", "Product Does not Exist");
+                }
+                else
+                {
+                    inventory.Product = product;
+                }
+                                  
             }
 
-            if(inventory.Location.Id != inventoryUpdate.LocationId)
+            if(inventory.Location.Name != inventoryUpdate.Location)
             {
-                var location = await _locationRepo.GetLocation(inventoryUpdate.LocationId);
+                var location = await _locationRepo.GetLocationByName(inventoryUpdate.Location);
 
                 if (location == null)
-                    return BadRequest(new { error = "Location not Found" });
+                {
+                    ModelState.AddModelError("Location", "Location Does not Exist");
 
-                inventory.Location = location;
+                }else
+                {
+                    inventory.Location = location;
+                }
+                    
+                
+            }
+            
+            if(inventoryUpdate.ThresholdCritical >= inventoryUpdate.ThresholdWarning)
+            {
+                ModelState.AddModelError("Threshold", "Critical should be less than the Warning");
+
+            }else
+            {
+                if (inventory.ThresholdCritical != inventoryUpdate.ThresholdCritical)
+                    inventory.ThresholdCritical = inventoryUpdate.ThresholdCritical;
+
+                if (inventory.ThresholdWarning != inventoryUpdate.ThresholdWarning)
+                    inventory.ThresholdWarning = inventoryUpdate.ThresholdWarning;
             }
 
-            if (!string.IsNullOrEmpty(inventoryUpdate.Sku))
-                inventory.Sku = inventoryUpdate.Sku;
+            
+            //Check the status. Status should adjust based on the value of threshold critical and warning.
 
-            //Removing Inventory Update of quantity.
-            //Quantity should be updated by adding transactions
-            //if (inventory.Quantity != inventoryUpdate.Quantity)
-            //    inventory.Quantity = inventoryUpdate.Quantity;
+            if(inventory.Quantity > 0)
+            {
+                var statusName = "";
 
-            if (inventory.ThresholdCritical != inventoryUpdate.ThresholdCritical)
-                inventory.ThresholdCritical = inventoryUpdate.ThresholdCritical;
+                if(inventory.Quantity < inventoryUpdate.ThresholdWarning && inventory.Quantity > inventoryUpdate.ThresholdCritical)
+                {
+                    statusName = "Warning";
+                }else if(inventory.Quantity < inventoryUpdate.ThresholdCritical)
+                {
+                    statusName = "Critical";
 
+                }else
+                {
+                    statusName = "OK";
+                }
+
+                var status = await _invRepo.GetInventoryStatusByName(statusName);
+
+                if(status == null)
+                {
+                    ModelState.AddModelError("Status", "STatus Does not Exist or Table is Empty");
+                }else
+                {
+                    inventory.Status = status;
+                }
+
+
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             await _invRepo.Save();
 
-            return Ok(inventory);
+            var invetoryToReturn = _mapper.Map<InventoryDetailDto>(inventory);
+
+            return Ok(invetoryToReturn);
 
 
         }
 
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> ArchiveInventory(int id)
+        {
+
+            var inventory = await _invRepo.GetInventory(id);
+
+            if (inventory == null)
+                return NotFound();
+
+
+            inventory.IsArchived = true;
+
+            if (await _invRepo.Save())
+                return Ok();
+
+
+            return BadRequest(new { error = "Error Deleting" });
+
+
+        }
 
 
     }

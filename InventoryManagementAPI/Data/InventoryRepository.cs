@@ -35,6 +35,7 @@ namespace InventoryManagementAPI.Data
                                         .Include(i => i.Product)
                                         .Include(i => i.Location)
                                         .Include(i => i.Status)
+                                        .Where(i => i.IsArchived == false)
                                         .AsQueryable();
 
             if (!string.IsNullOrEmpty(inventoryParams.Sku))
@@ -66,9 +67,25 @@ namespace InventoryManagementAPI.Data
             return inventory;
         }
 
+        public async Task<ICollection<InventoryStatus>> GetInventoryStatuses()
+        {
+            var inventoryStatuses = await _dbContext.InventoryStatuses.ToListAsync();
+
+            return inventoryStatuses;
+        }
+
+        public async Task<InventoryStatus> GetInventoryStatusByName(string name)
+        {
+            var status = await _dbContext.InventoryStatuses.SingleOrDefaultAsync(s => s.Status == name);
+
+            return status;
+        }
+
         public async Task<bool> Save()
         {
             return await _dbContext.SaveChangesAsync() > 0;
         }
+
+     
     }
 }

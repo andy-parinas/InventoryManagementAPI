@@ -15,5 +15,9 @@ namespace InventoryManagementAPI.Data
         Task<Inventory> GetInventory(int id);
 
         Task<Inventory> GetInventoryBySku(string sku);
+
+        Task<ICollection<InventoryStatus>> GetInventoryStatuses();
+
+        Task<InventoryStatus> GetInventoryStatusByName(string name);
     }
 }

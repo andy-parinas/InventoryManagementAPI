@@ -7,6 +7,8 @@ namespace InventoryManagementAPI.Helpers
 {
     public class ProductParams
     {
+        public string Name { get; set; }
+
         private const int MAX_PAGE_SIZE = 50;
 
         public int PageNumber { get; set; } = 1;
