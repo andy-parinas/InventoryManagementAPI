@@ -55,6 +55,16 @@ namespace InventoryManagementAPI.Controllers
 
         }
 
+        [HttpGet("types")]
+        public async Task<IActionResult> GetTransactionTypes()
+        {
+            var transactionTypes = await _transRepo.GetTransactionTypes();
+
+            var typesToReturn = _mapper.Map<ICollection<TransactionTypeDto>>(transactionTypes);
+
+            return Ok(typesToReturn);
+        }
+
 
 
     }

@@ -55,9 +55,51 @@ namespace InventoryManagementAPI.Data
             return await PageList<InventoryTransaction>.CreateAsync(transactionQuery, transactionParams.PageNumber, transactionParams.PageSize);
         }
 
+        public async Task<ICollection<TransactionType>> GetTransactionTypes()
+        {
+            var transactionTypes = await _dbContext.TransactionTypes.ToListAsync();
+
+
+            return transactionTypes;
+        }
+
+        public async Task<TransactionType> GetTransactionType(int id)
+        {
+            var transactionType = await _dbContext.TransactionTypes.SingleOrDefaultAsync(t => t.Id == id);
+
+            return transactionType;
+        }
+
         public async Task<bool> Save()
         {
-            return await _dbContext.SaveChangesAsync() > 0;
+            
+            using(var transaction = _dbContext.Database.BeginTransaction())
+            {
+                try
+                {
+
+                    await _dbContext.SaveChangesAsync();
+
+                    transaction.Commit();
+
+                    return true;
+
+                }catch(Exception e)
+                {
+
+                    transaction.Rollback();
+
+                    return false;
+                }
+            }
+            
+
+
+        }
+
+        public Task<bool> AddTransaction(Inventory inventory, InventoryTransaction inventoryTransaction)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace InventoryManagementAPI.Models
         public string Sku { get; set; }
 
         [Required]
-        public int Quantity { get; set; }
+        public double Quantity { get; set; }
 
         [Required]
         public int ThresholdWarning { get; set; }

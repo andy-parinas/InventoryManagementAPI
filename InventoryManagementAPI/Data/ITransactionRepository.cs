@@ -15,6 +15,11 @@ namespace InventoryManagementAPI.Data
 
         Task<PageList<InventoryTransaction>> GetTransactionsByInventoryId(int id, TransactionParams transactionParams);
 
+        Task<ICollection<TransactionType>> GetTransactionTypes();
+
+        Task<TransactionType> GetTransactionType(int id);
+
+        Task<bool> AddTransaction(Inventory inventory, InventoryTransaction inventoryTransaction);
 
     }
 }
