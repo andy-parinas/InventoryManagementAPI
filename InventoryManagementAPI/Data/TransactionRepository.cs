@@ -32,7 +32,11 @@ namespace InventoryManagementAPI.Data
 
         public async Task<InventoryTransaction> GetInventoryTransaction(int id)
         {
-            var transaction = await _dbContext.InventoryTransactions.Include(t => t.TransactionType).SingleOrDefaultAsync(t => t.Id == id);
+            var transaction = await _dbContext.InventoryTransactions
+                                                    .Include(t => t.TransactionType)
+                                                    .Include(t => t.Inventory)
+                                                    .Where(t => t.IsArchived == false)
+                                                    .SingleOrDefaultAsync(t => t.Id == id);
 
             return transaction;
         }
@@ -46,13 +50,16 @@ namespace InventoryManagementAPI.Data
 
         }
 
-        public async Task<PageList<InventoryTransaction>> GetTransactionsByInventoryId(int id, TransactionParams transactionParams)
+        public async Task<PageList<InventoryTransaction>> GetTransactionsByInventoryId(int id, 
+            TransactionParams transactionParams)
         {
             var transactionQuery = _dbContext.InventoryTransactions
                                                 .Include(t => t.TransactionType)
+                                                .Where(t => t.IsArchived == false)
                                                 .Where(t => t.Inventory.Id == id).AsQueryable();
 
-            return await PageList<InventoryTransaction>.CreateAsync(transactionQuery, transactionParams.PageNumber, transactionParams.PageSize);
+            return await PageList<InventoryTransaction>.CreateAsync(transactionQuery, transactionParams.PageNumber, 
+                transactionParams.PageSize);
         }
 
         public async Task<ICollection<TransactionType>> GetTransactionTypes()

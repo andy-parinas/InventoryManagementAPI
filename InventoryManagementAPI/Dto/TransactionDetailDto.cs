@@ -18,7 +18,8 @@ namespace InventoryManagementAPI.Dto
 
         public TransactionTypeDto TransactionType { get; set; }
 
-        public int TransactionTypeId { get; set; }
+        public InventoryDetailDto Inventory { get; set; }
+
 
     }
 }

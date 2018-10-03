@@ -22,5 +22,8 @@ namespace InventoryManagementAPI.Models
 
         public Inventory Inventory { get; set; }
 
+        public bool IsArchived { get; set; }
+
+
     }
 }

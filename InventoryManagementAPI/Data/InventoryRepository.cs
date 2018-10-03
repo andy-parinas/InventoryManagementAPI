@@ -45,6 +45,80 @@ namespace InventoryManagementAPI.Data
                 inventoriesQuery = inventoriesQuery.Where(i => i.Product.Name.Contains(inventoryParams.Product));
 
 
+            //Check the Sort Direction and Property
+            if(string.Equals(inventoryParams.Direction, "ASC"))
+            {
+                switch (inventoryParams.OrderBy.ToLower())
+                {
+                    case "location":
+                        inventoriesQuery = inventoriesQuery.OrderBy(i => i.Location.Name)
+                            .ThenBy(i => i.Product.Name).ThenBy(i => i.Status.Status);
+                        break;
+
+                    case "product":
+                        inventoriesQuery = inventoriesQuery.OrderBy(i => i.Product.Name)
+                            .ThenBy(i => i.Location.Name).ThenBy(i => i.Status.Status);
+                        break;
+
+                    case "sku":
+                        inventoriesQuery = inventoriesQuery.OrderBy(i => i.Sku)
+                            .ThenBy(i => i.Location.Name).ThenBy(i => i.Status.Status);
+                        break;
+
+                    case "quantity":
+                        inventoriesQuery = inventoriesQuery.OrderBy(i => i.Quantity)
+                            .ThenBy(i => i.Location.Name).ThenBy(i => i.Product.Name);
+                        break;
+
+                    case "status":
+                        inventoriesQuery = inventoriesQuery.OrderBy(i => i.Status.Status)
+                            .ThenBy(i => i.Location.Name).ThenBy(i => i.Product.Name);
+                        break;
+
+                    default:
+                         inventoriesQuery = inventoriesQuery.OrderBy(i => i.Location.Name)
+                            .ThenBy(i => i.Product.Name).ThenBy(i => i.Status.Status);
+                        break;
+                }
+
+            }else
+            {
+                switch (inventoryParams.OrderBy.ToLower())
+                {
+                    case "location":
+                        inventoriesQuery = inventoriesQuery.OrderByDescending(i => i.Location.Name)
+                            .ThenBy(i => i.Product.Name).ThenBy(i => i.Status.Status);
+                        break;
+
+                    case "product":
+                        inventoriesQuery = inventoriesQuery.OrderByDescending(i => i.Product.Name)
+                            .ThenBy(i => i.Location.Name).ThenBy(i => i.Status.Status);
+                        break;
+
+                    case "sku":
+                        inventoriesQuery = inventoriesQuery.OrderByDescending(i => i.Sku)
+                            .ThenBy(i => i.Location.Name).ThenBy(i => i.Status.Status);
+                        break;
+
+                    case "quantity":
+                        inventoriesQuery = inventoriesQuery.OrderByDescending(i => i.Quantity)
+                            .ThenBy(i => i.Location.Name).ThenBy(i => i.Product.Name);
+                        break;
+
+                    case "status":
+                        inventoriesQuery = inventoriesQuery.OrderByDescending(i => i.Status.Status)
+                            .ThenBy(i => i.Location.Name).ThenBy(i => i.Product.Name);
+                        break;
+
+                    default:
+                        inventoriesQuery = inventoriesQuery.OrderByDescending(i => i.Location.Name)
+                           .ThenBy(i => i.Product.Name).ThenBy(i => i.Status.Status);
+                        break;
+                }
+
+            }
+
+
             return await PageList<Inventory>.CreateAsync(inventoriesQuery, inventoryParams.PageNumber, inventoryParams.PageSize);
 
         }

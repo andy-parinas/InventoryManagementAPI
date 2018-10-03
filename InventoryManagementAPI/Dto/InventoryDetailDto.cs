@@ -19,10 +19,6 @@ namespace InventoryManagementAPI.Dto
 
         public int ThresholdCritical { get; set; }
 
-        //public ProductDetailDto Product { get; set; }
-
-        //public LocationDetailDto Location { get; set; }
-
         public int ProductId { get; set; }
 
         public string Product { get; set; }

@@ -82,7 +82,7 @@ namespace InventoryManagementAPI.Controllers
             var inventory = await _invRepo.GetInventory(id);
 
             if (inventory == null)
-                return NotFound();
+                return NotFound(new { error = new string[] { "Inventory not Found" } });
 
             var transactionType = await _transRepo.GetTransactionType(newTransaction.Transaction);
 
@@ -440,11 +440,15 @@ namespace InventoryManagementAPI.Controllers
 
             //Check the status. Status should adjust based on the value of threshold critical and warning.
 
-            if (inventory.Quantity > 0)
-            {
+            
                 var statusName = "";
 
-                if (inventory.Quantity < inventoryUpdate.ThresholdWarning && inventory.Quantity > inventoryUpdate.ThresholdCritical)
+                if(inventory.Quantity == 0)
+                {
+                    statusName = "No Stock";
+                }
+                else if (inventory.Quantity <= inventoryUpdate.ThresholdWarning 
+                    && inventory.Quantity > inventoryUpdate.ThresholdCritical && inventory.Quantity > 0)
                 {
                     statusName = "Warning";
                 }
@@ -462,15 +466,13 @@ namespace InventoryManagementAPI.Controllers
 
                 if (status == null)
                 {
-                    ModelState.AddModelError("Status", "STatus Does not Exist or Table is Empty");
+                    ModelState.AddModelError("Status", "Status Does not Exist or Table is Empty");
                 }
                 else
                 {
                     inventory.Status = status;
                 }
 
-
-            }
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
