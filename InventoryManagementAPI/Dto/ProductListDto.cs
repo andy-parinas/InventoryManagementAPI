@@ -15,6 +15,12 @@ namespace InventoryManagementAPI.Dto
 
         public string Category { get; set; }
 
+        public string Descriptions { get; set; }
+
+        public double Price { get; set; }
+
+        public double Cost { get; set; }
+
 
     }
 }

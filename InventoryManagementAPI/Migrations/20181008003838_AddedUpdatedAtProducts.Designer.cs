@@ -11,9 +11,10 @@ using System;
 namespace InventoryManagementAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181008003838_AddedUpdatedAtProducts")]
+    partial class AddedUpdatedAtProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,8 +136,6 @@ namespace InventoryManagementAPI.Migrations
                     b.Property<double>("Cost");
 
                     b.Property<string>("Descriptions");
-
-                    b.Property<bool>("IsArchived");
 
                     b.Property<string>("Name")
                         .IsRequired();

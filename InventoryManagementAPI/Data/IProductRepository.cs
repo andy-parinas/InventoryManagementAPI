@@ -18,5 +18,7 @@ namespace InventoryManagementAPI.Data
         Task<ICollection<ProductCategory>> GetProductCategories();
 
         Task<ProductCategory> GetProductCategory(int id);
+
+        Task<PageList<Inventory>> GetProductInventories(Product product, PageParams pageParams);
     }
 }

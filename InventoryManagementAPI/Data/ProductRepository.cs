@@ -34,6 +34,7 @@ namespace InventoryManagementAPI.Data
                             .Include(p => p.ProductCategory)
                             .SingleOrDefaultAsync(p => p.Id == id);
 
+
             return product;
         }
 
@@ -62,6 +63,59 @@ namespace InventoryManagementAPI.Data
         {
             var products = _dbContext.Products.Include(p => p.ProductCategory).AsQueryable();
 
+            if (string.Equals(productParams.Direction, "ASC"))
+            {
+                switch (productParams.OrderBy.ToLower())
+                {
+                    case "name":
+                        products = products.OrderBy(p => p.Name);
+                        break;
+
+                    case "category":
+                        products = products.OrderBy(p => p.ProductCategory.Name);
+                        break;
+
+                    case "upc":
+                        products = products.OrderBy(p => p.Upc);
+                        break;
+
+                    case "price":
+                        products = products.OrderBy(p => p.Price);
+                        break;
+
+                    default:
+                        products = products.OrderBy(p => p.Name);
+                        break;
+                }
+
+            }
+            else
+            {
+                switch (productParams.OrderBy.ToLower())
+                {
+                    case "name":
+                        products = products.OrderByDescending(p => p.Name);
+                        break;
+
+                    case "category":
+                        products = products.OrderByDescending(p => p.ProductCategory.Name);
+                        break;
+
+                    case "upc":
+                        products = products.OrderByDescending(p => p.Upc);
+                        break;
+
+                    case "price":
+                        products = products.OrderByDescending(p => p.Price);
+                        break;
+
+                    default:
+                        products = products.OrderByDescending(p => p.Name);
+                        break;
+                }
+
+            }
+
             if (!string.IsNullOrEmpty(productParams.Name))
                 products = products.Where(p => p.Name.Contains(productParams.Name));
 
@@ -72,6 +126,18 @@ namespace InventoryManagementAPI.Data
         public async Task<bool> Save()
         {
             return await _dbContext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<PageList<Inventory>> GetProductInventories(Product product, PageParams pageParams)
+        {
+
+            var inventories = _dbContext.Inventories
+                                        .Where(i => i.Product == product)
+                                        .Where(i => i.IsArchived == false)
+                                        .AsQueryable();
+
+            return await PageList<Inventory>.CreateAsync(inventories, pageParams.PageNumber, pageParams.PageSize);
+
         }
 
         

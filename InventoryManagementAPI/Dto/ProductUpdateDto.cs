@@ -12,11 +12,19 @@ namespace InventoryManagementAPI.Dto
         public string Upc { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string Product { get; set; }
 
         public string Descriptions { get; set; }
 
         [Required]
-        public int ProductCategoryId { get; set; }
+        public int Category { get; set; }
+
+        [Required]
+        public double Cost { get; set; }
+
+        [Required]
+        public double Price { get; set; }
+
+
     }
 }

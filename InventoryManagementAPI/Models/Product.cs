@@ -21,9 +21,15 @@ namespace InventoryManagementAPI.Models
 
         public double Price { get; set; }
 
+        public double Cost { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
+
         public ProductCategory ProductCategory { get; set; }
 
         public ICollection<Inventory> Inventories { get; set; }
+
+        public bool IsArchived { get; set; }
 
 
     }
