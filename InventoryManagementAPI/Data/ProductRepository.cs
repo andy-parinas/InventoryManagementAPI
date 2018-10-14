@@ -61,7 +61,10 @@ namespace InventoryManagementAPI.Data
 
         public async Task<PageList<Product>> GetProducts(ProductParams productParams)
         {
-            var products = _dbContext.Products.Include(p => p.ProductCategory).AsQueryable();
+            var products = _dbContext.Products
+                                        .Include(p => p.ProductCategory)
+                                        .Where(p => p.IsArchived == false)
+                                        .AsQueryable();
 
             if (string.Equals(productParams.Direction, "ASC"))
             {

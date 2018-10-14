@@ -56,7 +56,7 @@ namespace InventoryManagementAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto newProduct)
         {
-            var productCategory = await _productRepo.GetProductCategory(newProduct.ProductCategoryId);
+            var productCategory = await _productRepo.GetProductCategory(newProduct.Category);
 
             if (productCategory == null)
                 ModelState.AddModelError("ProductCategory", "Invalid Product Category");
@@ -67,7 +67,7 @@ namespace InventoryManagementAPI.Controllers
             Product createdProduct = new Product
             {
                 Upc = newProduct.Upc,
-                Name = newProduct.Name,
+                Name = newProduct.Product,
                 Descriptions = newProduct.Descriptions,
                 ProductCategory = productCategory,
                 UpdatedAt = DateTime.Now
