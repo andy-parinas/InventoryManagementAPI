@@ -44,6 +44,12 @@ namespace InventoryManagementAPI.Data
             if (!string.IsNullOrEmpty(inventoryParams.Product))
                 inventoriesQuery = inventoriesQuery.Where(i => i.Product.Name.Contains(inventoryParams.Product));
 
+            if (!string.IsNullOrEmpty(inventoryParams.Location))
+                inventoriesQuery = inventoriesQuery.Where(i => i.Location.Name.Contains(inventoryParams.Location));
+
+            if (inventoryParams.Status > 0)
+                inventoriesQuery = inventoriesQuery.Where(i => i.Status.Id == inventoryParams.Status);
+
 
             //Check the Sort Direction and Property
             if(string.Equals(inventoryParams.Direction, "ASC"))

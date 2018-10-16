@@ -11,6 +11,10 @@ namespace InventoryManagementAPI.Helpers
 
         public string Product { get; set; }
 
+        public string Location { get; set; }
+
+        public int Status { get; set; } = 0;
+
         public string OrderBy { get; set; } = "location";
 
         public string Direction { get; set; } = "ASC";

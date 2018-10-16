@@ -90,7 +90,7 @@ namespace InventoryManagementAPI.Controllers
                 return NotFound(new { error = new string[] { "Transaction Type not Found" } });
 
             if(newTransaction.Quantity <= 0)
-                ModelState.AddModelError("Quantity", "Quantity Should be greater than Zero");
+                ModelState.AddModelError("error", "Quantity Should be greater than Zero");
 
 
             if (string.Equals(transactionType.Action, "add")){
@@ -141,7 +141,7 @@ namespace InventoryManagementAPI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("Quantity", "Must not make quantity Negative");
+                    ModelState.AddModelError("error", "Must not make quantity Negative");
                 }
             }
 
@@ -193,7 +193,7 @@ namespace InventoryManagementAPI.Controllers
                 return NotFound(new { error = new string[] { "Transaction Type not Found" } });
 
             if (updateTransaction.Quantity < 0)
-                ModelState.AddModelError("quantity", "quantity must be a positive number");
+                ModelState.AddModelError("error", "quantity must be a positive number");
 
             //Revert Back the Inventory Count prior to the Transaction.
             //If Add, then subtract the transaction original quantity to the Inventory Quantity
@@ -218,7 +218,7 @@ namespace InventoryManagementAPI.Controllers
 
                 if(quantity < 0)
                 {
-                    ModelState.AddModelError("quantity", "Inventory quantity cannot be negative");
+                    ModelState.AddModelError("error", "Inventory quantity cannot be negative");
                 }else
                 {
                     inventory.Quantity = quantity;
@@ -300,21 +300,21 @@ namespace InventoryManagementAPI.Controllers
             var product = await _productRepo.GetProductByName(inventoryCreate.Product);
 
             if (product == null)
-                ModelState.AddModelError("Product", "Product Not Found");
+                ModelState.AddModelError("error", "Product Not Found");
 
             var location = await _locationRepo.GetLocationByName(inventoryCreate.Location);
 
             if (location == null)
-                ModelState.AddModelError("Location", "Location not Found");
+                ModelState.AddModelError("error", "Location not Found");
 
             var status = await _invRepo.GetInventoryStatusByName("No Stock");
 
             if (status == null)
-                ModelState.AddModelError("Status", "Status Not Found");
+                ModelState.AddModelError("error", "Status Not Found");
 
             if (string.IsNullOrEmpty(inventoryCreate.Sku))
             {
-                ModelState.AddModelError("SKU", "SKU is Required");
+                ModelState.AddModelError("error", "SKU is Required");
             }
             else
             {
@@ -325,12 +325,12 @@ namespace InventoryManagementAPI.Controllers
                 //This means that the combination of Product and Location already exist.
                 if (inventoryBySku != null)
                 {
-                    ModelState.AddModelError("SKU", "SKU Already Exist");
+                    ModelState.AddModelError("error", "SKU Already Exist");
                 }
             }
 
             if (inventoryCreate.ThresholdCritical >= inventoryCreate.ThresholdWarning)
-                ModelState.AddModelError("Threshold", "Critical should be less than Warning");
+                ModelState.AddModelError("error", "Critical should be less than Warning");
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -385,7 +385,7 @@ namespace InventoryManagementAPI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("SKU", "SKU Already Exist");
+                    ModelState.AddModelError("error", "SKU Already Exist");
                 }
 
             }
@@ -397,7 +397,7 @@ namespace InventoryManagementAPI.Controllers
 
                 if (product == null)
                 {
-                    ModelState.AddModelError("Product", "Product Does not Exist");
+                    ModelState.AddModelError("error", "Product Does not Exist");
                 }
                 else
                 {
@@ -412,7 +412,7 @@ namespace InventoryManagementAPI.Controllers
 
                 if (location == null)
                 {
-                    ModelState.AddModelError("Location", "Location Does not Exist");
+                    ModelState.AddModelError("error", "Location Does not Exist");
 
                 }
                 else
@@ -425,7 +425,7 @@ namespace InventoryManagementAPI.Controllers
 
             if (inventoryUpdate.ThresholdCritical >= inventoryUpdate.ThresholdWarning)
             {
-                ModelState.AddModelError("Threshold", "Critical should be less than the Warning");
+                ModelState.AddModelError("error", "Critical should be less than the Warning");
 
             }
             else
@@ -466,7 +466,7 @@ namespace InventoryManagementAPI.Controllers
 
                 if (status == null)
                 {
-                    ModelState.AddModelError("Status", "Status Does not Exist or Table is Empty");
+                    ModelState.AddModelError("error", "Status Does not Exist or Table is Empty");
                 }
                 else
                 {
