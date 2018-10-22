@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InventoryManagementAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,10 @@ namespace InventoryManagementAPI.Dto
         public string Address { get; set; }
 
         public string Phone { get; set; }
+
+        public LocationTypeDto LocationType { get; set; }
+
+        public int LocationTypeId { get; set; }
 
     }
 }

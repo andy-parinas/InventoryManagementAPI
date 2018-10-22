@@ -11,6 +11,10 @@ namespace InventoryManagementAPI.Helpers
 
         public string LocationType { get; set; }
 
+        public string OrderBy { get; set; } = "location";
+
+        public string Direction { get; set; } = "ASC";
+
         private const int MAX_PAGE_SIZE = 50;
 
         public int PageNumber { get; set; } = 1;

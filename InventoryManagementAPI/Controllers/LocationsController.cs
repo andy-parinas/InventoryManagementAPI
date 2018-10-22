@@ -89,5 +89,52 @@ namespace InventoryManagementAPI.Controllers
         }
 
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateLocation(int id, [FromBody] LocationFormDto locationUpdate)
+        {
+            var location = await _locationRepo.GetLocation(id);
+
+            if (location == null)
+                return NotFound(new { error = new string[] { "Location Not Found" } });
+
+
+            if(locationUpdate.LocationTypeId > 0)
+            {
+                var locationType = await _locationRepo.GetLocationType(locationUpdate.LocationTypeId);
+
+                if(locationType == null)
+                    return NotFound(new { error = new string[] { "Location Type Not Found" } });
+
+                location.LocationType = locationType;
+
+            }
+
+            if (!string.IsNullOrEmpty(locationUpdate.Name))
+                location.Name = locationUpdate.Name;
+
+            if (!string.IsNullOrEmpty(locationUpdate.Address))
+                location.Address = locationUpdate.Address;
+
+            if (!string.IsNullOrEmpty(locationUpdate.Phone))
+                location.Phone = locationUpdate.Phone;
+
+            if(await _locationRepo.Save())
+            {
+                return Ok(location);
+            }
+
+            return BadRequest(new { error = new string[] { "Error Saving Location" } });
+        }
+
+
+        [HttpGet("types")]
+        public async Task<IActionResult> GetLocationTypes()
+        {
+            var locationTypes = await _locationRepo.GetLocationTypes();
+
+            var returnedLocationTypes = _mapper.Map<ICollection<LocationTypeDto>>(locationTypes);
+
+            return Ok(returnedLocationTypes);
+        }
     }
 }

@@ -17,5 +17,7 @@ namespace InventoryManagementAPI.Data
 
         Task<LocationType> GetLocationType(int id);
 
+        Task<ICollection<LocationType>> GetLocationTypes();
+
     }
 }

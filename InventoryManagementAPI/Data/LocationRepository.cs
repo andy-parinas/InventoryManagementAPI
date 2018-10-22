@@ -52,6 +52,57 @@ namespace InventoryManagementAPI.Data
             if (!string.IsNullOrEmpty(locationParams.LocationType))
                 locations = locations.Where(l => l.LocationType.Name == locationParams.LocationType);
 
+            if(string.Equals(locationParams.Direction, "ASC"))
+            {
+
+                switch (locationParams.OrderBy.ToLower())
+                {
+                    case "name":
+                        locations = locations.OrderBy(l => l.Name);
+                        break;
+
+                    case "address":
+                        locations = locations.OrderBy(l => l.Address);
+                        break;
+
+                    case "locationtype":
+                        locations = locations.OrderBy(l => l.LocationType.Name);
+                        break;
+
+                    default:
+                        locations = locations.OrderBy(l => l.Name);
+                        break;
+                }
+
+            }else
+            {
+
+                switch (locationParams.OrderBy.ToLower())
+                {
+                    case "name":
+                        locations = locations.OrderByDescending(l => l.Name);
+                        break;
+
+                    case "address":
+                        locations = locations.OrderByDescending(l => l.Address);
+                        break;
+
+                    case "locationtype":
+                        locations = locations.OrderByDescending(l => l.LocationType.Name);
+                        break;
+
+                    default:
+                        locations = locations.OrderByDescending(l => l.Name);
+                        break;
+
+                }
+               
+
+            }
+
+
+
+
             //return await locations.ToListAsync();
             return await PageList<Location>.CreateAsync(locations,
                 locationParams.PageNumber, locationParams.PageSize);
@@ -63,6 +114,13 @@ namespace InventoryManagementAPI.Data
             var locationType = await _dbContext.LocationTypes.SingleOrDefaultAsync(t => t.Id == id);
 
             return locationType;
+        }
+
+        public async Task<ICollection<LocationType>> GetLocationTypes()
+        {
+            var locationTypes = await _dbContext.LocationTypes.ToListAsync();
+
+            return locationTypes;
         }
 
         public async Task<bool> Save()

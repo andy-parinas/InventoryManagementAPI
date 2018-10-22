@@ -39,6 +39,11 @@ namespace InventoryManagementAPI.Helpers
 
             CreateMap<InventoryStatus, InventoryStatusListDto>();
 
+            CreateMap<LocationType, LocationTypeDto>();
+
+            CreateMap<Location, LocationListDto>()
+                .ForMember(d => d.LocationTypeId, o => o.MapFrom(l => l.LocationType.Id));
+
         }
     }
 }
