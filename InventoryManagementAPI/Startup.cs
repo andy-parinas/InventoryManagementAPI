@@ -37,9 +37,29 @@ namespace InventoryManagementAPI
             services.AddCors();
 
             //ADD DATABASE CONTEXT
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
 
             //ADD THE AUTHENTICATION SERVICES
+            var connectionString = "";
+
+            //Check if there is an evironment parameter assigned. 
+            //If not will default to LocalDB. 
+            if (string.IsNullOrEmpty(Configuration["DatabaseServer"]))
+            {
+                connectionString = Configuration.GetConnectionString("DefaultConnection");
+            }
+            else
+            {
+                var server = Configuration["DatabaseServer"];
+                var database = Configuration["DatabaseName"];
+                var user = Configuration["DatabaseUser"];
+                var password = Configuration["DatabasePassword"];
+                connectionString = string.Format("Server={0};Database={1};User={2};Password={3};",
+                    server, database, user, password);
+            }
+
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -5,9 +5,19 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InventoryManagementAPI", "InventoryManagementAPI\InventoryManagementAPI.csproj", "{FFB72E89-E3F2-4CFB-81E9-D3A8F45FCEC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagementAPITests", "InventoryManagementAPITests\InventoryManagementAPITests.csproj", "{1C52FB3A-4FC6-4EA9-9243-09E16B397741}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InventoryManagementAPITests", "InventoryManagementAPITests\InventoryManagementAPITests.csproj", "{1C52FB3A-4FC6-4EA9-9243-09E16B397741}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POSApplicationAPI", "POSApplicationAPI\POSApplicationAPI.csproj", "{22E83994-A354-4297-976E-9AEAF9E5A257}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POSApplicationAPI", "POSApplicationAPI\POSApplicationAPI.csproj", "{22E83994-A354-4297-976E-9AEAF9E5A257}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{06AF0DDD-DBCC-404E-AFD2-876E103B1F98}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nginx", "nginx", "{5014DCC9-7CF8-4D2C-95F0-677A1C8E8238}"
+	ProjectSection(SolutionItems) = preProject
+		nginx.conf = nginx.conf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +40,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5014DCC9-7CF8-4D2C-95F0-677A1C8E8238} = {06AF0DDD-DBCC-404E-AFD2-876E103B1F98}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3B3DD05-98F0-4782-8FEA-AC3F28BE0F5A}

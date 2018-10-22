@@ -1,0 +1,53 @@
+version: "3.6"
+
+networks:
+  frontend:
+  backend:
+
+services:
+
+  app:
+    build: 
+      context: ./InventoryManagementAPI
+      dockerfile: Dockerfile
+    environment:
+      - DatabaseServer=mssqlserver
+      - DatabaseName=InventoryDB
+      - DatabaseUser=sa
+      - DatabasePassword=InventoryManagement(!)
+    container_name: inventoryapi
+    ports:
+      - "5000:5000"
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - mssqlserver
+
+  mssqlserver:
+    image: "microsoft/mssql-server-linux:latest"
+    ports:
+      - "1433:1433"
+    container_name: inventorydb
+    volumes:
+      - inventory:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=InventoryManagement(!)
+      - MSSQL_PID=Express
+    networks:
+      - backend
+
+  proxy:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: app-proxy
+    ports:
+      - "80:80"
+    links:
+      - app
+    networks: 
+      - frontend
+volumes:
+  inventory:
