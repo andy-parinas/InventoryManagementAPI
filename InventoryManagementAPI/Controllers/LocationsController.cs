@@ -59,11 +59,18 @@ namespace InventoryManagementAPI.Controllers
             var locationType = await _locationRepo.GetLocationType(location.LocationTypeId);
 
             if (locationType == null)
-                ModelState.AddModelError("LocationType", "Location Type not found");
+                ModelState.AddModelError("error", "Location Type not found");
+
+
+            if (string.IsNullOrEmpty(location.Name))
+                ModelState.AddModelError("error", "Location name is required");
+
+            if (string.IsNullOrEmpty(location.Address))
+                ModelState.AddModelError("error", "Location Address is required");
+
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
 
             var newLocation = new Location
             {
