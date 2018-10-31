@@ -111,7 +111,7 @@ namespace InventoryManagementAPI.Data
 
         public async Task<LocationType> GetLocationType(int id)
         {
-            var locationType = await _dbContext.LocationTypes.SingleOrDefaultAsync(t => t.Id == id);
+            var locationType = await _dbContext.LocationTypes.Include(t => t.Locations).SingleOrDefaultAsync(t => t.Id == id);
 
             return locationType;
         }

@@ -53,6 +53,16 @@ namespace InventoryManagementAPI.Controllers
 
         }
 
+        [HttpGet("types")]
+        public async Task<IActionResult> GetLocationTypes()
+        {
+            var locationTypes = await _locationRepo.GetLocationTypes();
+
+            var returnedLocationTypes = _mapper.Map<ICollection<LocationTypeDto>>(locationTypes);
+
+            return Ok(returnedLocationTypes);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateLocation([FromBody] LocationFormDto location)
         {
@@ -96,6 +106,30 @@ namespace InventoryManagementAPI.Controllers
         }
 
 
+        [HttpPost("types")]
+        public async Task<IActionResult> CreateLocationType([FromBody] LocationTypeDto locationType)
+        {
+            if (string.IsNullOrEmpty(locationType.Name))
+                ModelState.AddModelError("error", "LocationType Required");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            var newLocationType = new LocationType
+            {
+                Name = locationType.Name
+            };
+
+            _locationRepo.Add(newLocationType);
+
+            if (await _locationRepo.Save())
+                return Ok(newLocationType);
+
+            return BadRequest(new { error = new string[] { "Error creating Location Type" } });
+        }
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLocation(int id, [FromBody] LocationFormDto locationUpdate)
         {
@@ -133,15 +167,64 @@ namespace InventoryManagementAPI.Controllers
             return BadRequest(new { error = new string[] { "Error Saving Location" } });
         }
 
-
-        [HttpGet("types")]
-        public async Task<IActionResult> GetLocationTypes()
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteLocation(int id)
         {
-            var locationTypes = await _locationRepo.GetLocationTypes();
-
-            var returnedLocationTypes = _mapper.Map<ICollection<LocationTypeDto>>(locationTypes);
-
-            return Ok(returnedLocationTypes);
+            return Ok();
         }
+
+
+
+        [HttpPut("types/{id}")]
+        public async Task<IActionResult> UpdateLocationType(int id, [FromBody] LocationTypeDto locationTypeUpdate)
+        {
+            var locationType = await _locationRepo.GetLocationType(id);
+
+            if (locationType == null)
+                return NotFound(new { error = new string[] { "Inventory Type not found" } });
+
+
+            if (string.IsNullOrEmpty(locationTypeUpdate.Name))
+                ModelState.AddModelError("error", "Location Type name is required");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            locationType.Name = locationTypeUpdate.Name;
+
+            if(await _locationRepo.Save())
+            {
+                var returnedLocationType = _mapper.Map<LocationTypeDto>(locationType);
+                return Ok(returnedLocationType);
+            }
+
+            return BadRequest(new { error = new string[] { "Inventory Type not found" } });
+
+        }
+
+        [HttpDelete("types/{id}")]
+        public async Task<IActionResult> DeleteLocationType(int id)
+        {
+
+            var locationType = await _locationRepo.GetLocationType(id);
+
+            if (locationType == null)
+                return NotFound(new { error = new string[] { "Location Type not found" } });
+
+            if (locationType.Locations.Count > 0)
+                return BadRequest(new { error = new string[] { "Location Type have associated Location cannot be deleted" } });
+
+
+            _locationRepo.Delete(locationType);
+
+            if (await _locationRepo.Save())
+                return Ok();
+
+
+            return BadRequest(new { error = new string[] { "Location Type cannot be deleted" } });
+
+        }
+       
     }
 }
