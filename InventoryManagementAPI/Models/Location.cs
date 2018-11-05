@@ -23,6 +23,7 @@ namespace InventoryManagementAPI.Models
 
         public ICollection<Inventory> Inventories { get; set; }
 
+        public bool IsArchived { get; set; }
 
 
     }

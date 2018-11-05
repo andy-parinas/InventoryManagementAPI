@@ -170,7 +170,25 @@ namespace InventoryManagementAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLocation(int id)
         {
-            return Ok();
+            var location = await _locationRepo.GetLocation(id);
+
+            if (location == null)
+                return NotFound(new { error = new string[] { "Location Not Found" } });
+
+            if (location.Inventories.Count > 0)
+                ModelState.AddModelError("error", "Location have associated inventories");
+
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            location.IsArchived = true;
+
+
+            if (await _locationRepo.Save())
+                return Ok(location);
+
+            return BadRequest(new { error = new string[] { "Error Deleting Location" } });
         }
 
 

@@ -59,7 +59,7 @@ namespace InventoryManagementAPI.Controllers
             var productCategory = await _productRepo.GetProductCategory(newProduct.Category);
 
             if (productCategory == null)
-                ModelState.AddModelError("ProductCategory", "Invalid Product Category");
+                ModelState.AddModelError("error", "Invalid Product Category");
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -98,7 +98,7 @@ namespace InventoryManagementAPI.Controllers
             var category = await _productRepo.GetProductCategory(productUpdate.Category);
 
             if (category == null)
-                ModelState.AddModelError("ProductCategory", "Product Category Not Found");
+                ModelState.AddModelError("error", "Product Category Not Found");
 
 
             if (!ModelState.IsValid)
@@ -121,7 +121,7 @@ namespace InventoryManagementAPI.Controllers
                 return Ok(updatedProduct);
             }
 
-            return BadRequest(new { error = "Product cannot be updated" });
+            return BadRequest(new { error = new string[] { "Product cannot be updated" } });
 
 
         }
@@ -140,7 +140,7 @@ namespace InventoryManagementAPI.Controllers
             var inventories = await _productRepo.GetProductInventories(product, pageParams);
 
             if (inventories.Count > 0)
-                ModelState.AddModelError("products", "Product still have active inventories");
+                ModelState.AddModelError("error", "Product still have active inventories");
 
 
             if (!ModelState.IsValid)
@@ -154,7 +154,7 @@ namespace InventoryManagementAPI.Controllers
                 return Ok();
             }
 
-            return BadRequest(new { error = "Product cannot be deleted" });
+            return BadRequest(new { error = new string[] { "Product cannot be deleted" } });
         }
 
 
@@ -185,7 +185,7 @@ namespace InventoryManagementAPI.Controllers
 
             if(await _productRepo.Save())
             {
-                return StatusCode(201);
+                return Ok(category);
             }
 
             return BadRequest(new { error = new string[] { "Product Category cannot be saved" } });
@@ -198,7 +198,14 @@ namespace InventoryManagementAPI.Controllers
             var category = await _productRepo.GetProductCategory(id);
 
             if (category == null)
-                return NotFound();
+                return NotFound(new { error = new string[] { "Category not found" } });
+
+            if (string.IsNullOrEmpty(categoryUpdate.Name))
+                ModelState.AddModelError("error", "Category Name is required");
+
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             category.Name = categoryUpdate.Name;
 
@@ -209,11 +216,38 @@ namespace InventoryManagementAPI.Controllers
                 return Ok(categoryToReturn);
             }
 
-            return BadRequest(new { error = "Cannot update category" });
+            return BadRequest(new { error = new string[] { "Cannot update category" } });
 
 
         }
 
+
+        [HttpDelete("categories/{id}")]
+        public async Task<IActionResult> DeleteProductCategories(int id)
+        {
+
+            var category = await _productRepo.GetProductCategory(id);
+
+            if (category == null)
+                return NotFound(new { error = new string[] { "Product Category not Found" } });
+
+
+            if (category.Products.Count > 0)
+                return BadRequest(new { error = new string[] { "Category have associated products. Cannot be deleted" } });
+
+
+            _productRepo.Delete(category);
+
+
+            if(await _productRepo.Save())
+            {
+                return NoContent();
+            }
+
+
+            return BadRequest(new { error = new string[] { "Error delete category" } });
+
+        }
 
     }
 }

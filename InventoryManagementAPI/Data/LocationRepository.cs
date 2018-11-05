@@ -30,21 +30,28 @@ namespace InventoryManagementAPI.Data
 
         public async Task<Location> GetLocation(int id)
         {
-            var location = await _dbContext.Locations.SingleOrDefaultAsync(l => l.Id == id);
+            var location = await _dbContext.Locations
+                                        .Include(l => l.Inventories)
+                                        .SingleOrDefaultAsync(l => l.Id == id);
 
             return location;
         }
 
         public async Task<Location> GetLocationByName(string name)
         {
-            var location = await _dbContext.Locations.SingleOrDefaultAsync(l => l.Name == name);
+            var location = await _dbContext.Locations
+                                        .Include(l => l.Inventories)
+                                        .SingleOrDefaultAsync(l => l.Name == name);
 
             return location;
         }
 
         public async Task<PageList<Location>> GetLocations(LocationParams locationParams)
         {
-            var locations = _dbContext.Locations.Include(l => l.LocationType).AsQueryable();
+            var locations = _dbContext.Locations
+                                    .Include(l => l.LocationType)
+                                    .Where(l => l.IsArchived == false)
+                                    .AsQueryable();
 
             if (!string.IsNullOrEmpty(locationParams.Name))
                 locations = locations.Where(l => l.Name.Contains(locationParams.Name));

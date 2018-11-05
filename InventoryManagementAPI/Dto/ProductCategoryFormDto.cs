@@ -8,7 +8,7 @@ namespace InventoryManagementAPI.Dto
 {
     public class ProductCategoryFormDto
     {
-        [Required]
+
         public string Name { get; set; }
 
     }

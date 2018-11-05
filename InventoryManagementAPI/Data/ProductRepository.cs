@@ -45,16 +45,11 @@ namespace InventoryManagementAPI.Data
             return product;
         }
 
-        public async Task<ICollection<ProductCategory>> GetProductCategories()
-        {
-            var categories = await _dbContext.ProductCategories.ToListAsync();
-
-            return categories;
-        }
-
         public async Task<ProductCategory> GetProductCategory(int id)
         {
-            var category = await _dbContext.ProductCategories.SingleOrDefaultAsync(c => c.Id == id);
+            var category = await _dbContext.ProductCategories
+                                        .Include(c => c.Products)
+                                        .SingleOrDefaultAsync(c => c.Id == id);
 
             return category;
         }
@@ -143,6 +138,16 @@ namespace InventoryManagementAPI.Data
 
         }
 
-        
+
+        public async Task<ICollection<ProductCategory>> GetProductCategories()
+        {
+            var categories = await _dbContext.ProductCategories.ToListAsync();
+
+            return categories;
+        }
+
+
+
+
     }
 }
