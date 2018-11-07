@@ -7,11 +7,12 @@ using InventoryManagementAPI.Data;
 using InventoryManagementAPI.Dto;
 using InventoryManagementAPI.Helpers;
 using InventoryManagementAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagementAPI.Controllers
 {
-
+    [Authorize]
     [Route("api/locations")]
     public class LocationsController : Controller
     {

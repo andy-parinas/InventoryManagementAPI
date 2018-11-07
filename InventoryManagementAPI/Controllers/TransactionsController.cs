@@ -6,11 +6,13 @@ using AutoMapper;
 using InventoryManagementAPI.Data;
 using InventoryManagementAPI.Dto;
 using InventoryManagementAPI.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagementAPI.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/transactions")]
     public class TransactionsController : Controller
