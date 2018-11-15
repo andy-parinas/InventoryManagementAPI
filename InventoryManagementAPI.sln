@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nginx", "nginx", "{5014DCC9
 		nginx.conf = nginx.conf
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AplicationHelperTools", "AplicationHelperTools\AplicationHelperTools.csproj", "{9098B43A-77C4-4C29-876B-BF60E2718AF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{22E83994-A354-4297-976E-9AEAF9E5A257}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22E83994-A354-4297-976E-9AEAF9E5A257}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22E83994-A354-4297-976E-9AEAF9E5A257}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9098B43A-77C4-4C29-876B-BF60E2718AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9098B43A-77C4-4C29-876B-BF60E2718AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9098B43A-77C4-4C29-876B-BF60E2718AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9098B43A-77C4-4C29-876B-BF60E2718AF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

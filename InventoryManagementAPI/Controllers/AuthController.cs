@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using InventoryManagementAPI.Data;
 using InventoryManagementAPI.Dto;
+using InventoryManagementAPI.Helpers;
 using InventoryManagementAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,8 @@ namespace InventoryManagementAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterDto register)
+        public async Task<IActionResult> Register([FromBody] UserRegisterDto register, 
+            [FromQuery] RegisterParams registerParams)
         {
             if (await _authRepo.UserExist(register.Username))
                 ModelState.AddModelError("Username", "Username Already Exist");
