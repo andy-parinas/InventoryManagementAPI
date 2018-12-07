@@ -39,9 +39,13 @@ namespace InventoryManagementAPI.Data
 
         public async Task<Location> GetLocationByName(string name)
         {
+            //var location = await _dbContext.Locations
+            //                            .Include(l => l.Inventories)
+            //                            .SingleOrDefaultAsync(l => l.Name == name);
             var location = await _dbContext.Locations
-                                        .Include(l => l.Inventories)
-                                        .SingleOrDefaultAsync(l => l.Name == name);
+                                       .Include(l => l.Inventories)
+                                       .Where(l => l.IsArchived == false)
+                                       .FirstOrDefaultAsync(l => l.Name == name);
 
             return location;
         }

@@ -40,7 +40,9 @@ namespace InventoryManagementAPI.Data
 
         public async Task<Product> GetProductByName(string name)
         {
-            var product = await _dbContext.Products.SingleOrDefaultAsync(p => p.Name == name);
+            //var product = await _dbContext.Products.SingleOrDefaultAsync(p => p.Name == name);
+            var product = await _dbContext.Products.Where(p => p.IsArchived == false)
+                .FirstOrDefaultAsync(p => p.Name == name);
 
             return product;
         }

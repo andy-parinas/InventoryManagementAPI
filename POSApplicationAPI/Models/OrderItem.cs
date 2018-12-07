@@ -25,8 +25,11 @@ namespace POSApplicationAPI.Models
 
         public double TotalIncGst { get; set; }
 
+        public double Discounts { get; set; }
+
         public Order Order { get; set; }
 
+        public Product Product { get; set; }
 
     }
 }

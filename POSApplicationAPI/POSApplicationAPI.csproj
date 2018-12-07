@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20180806001138_AddOrderModel.Designer.cs" />
     <Compile Remove="Migrations\20180809001543_AddInventoryTransactionModel.cs" />
     <Compile Remove="Migrations\20180809001543_AddInventoryTransactionModel.Designer.cs" />
+    <Compile Remove="Migrations\20181116002245_AddProductToOrderitem.cs" />
+    <Compile Remove="Migrations\20181116002245_AddProductToOrderitem.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
