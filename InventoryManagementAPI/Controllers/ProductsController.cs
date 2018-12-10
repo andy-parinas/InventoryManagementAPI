@@ -72,7 +72,9 @@ namespace InventoryManagementAPI.Controllers
                 Name = newProduct.Product,
                 Descriptions = newProduct.Descriptions,
                 ProductCategory = productCategory,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                Price = newProduct.Price,
+                Cost = newProduct.Cost
             };
 
             _productRepo.Add(createdProduct);
